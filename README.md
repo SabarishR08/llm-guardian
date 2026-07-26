@@ -2,15 +2,16 @@
 
 **A Real-Time Security Firewall That Protects AI Agents from Prompt Injection, Tool Poisoning, and Data Leaks**
 
-Team **Mutex** (RH-0045) — RUSH HOUR 24, National Engineering Challenge  
-Panimalar Engineering College — Cyber Security (Software Track)
+Team **Mutex** (RH-0045) — **RUSH HOUR 24: National Hackathon**  
+Hosted by **Sathyabama Institute of Science and Technology**  
+Team from **Panimalar Engineering College**
 
-| # | Name | Role | Module Ownership |
-|---|------|------|-------------------|
-| 01 | Sabarish R | Team Lead | Backend core (API, auth, WS proxy) |
-| 02 | Vignesh R | Member | Detection engine |
-| 03 | Shafeeq S | Member | MCP server + bridge |
-| 04 | Rohith V K | Member | Dashboard + live chat UI |
+| # | Name | Module Ownership |
+|---|------|-------------------|
+| 01 | Sabarish R | Backend core (API, auth, WS proxy) |
+| 02 | Vignesh R | Detection engine |
+| 03 | Shafeeq S | MCP Integration & Sandboxed Tool Execution |
+| 04 | Rohith V K | Dashboard + live chat UI |
 
 ---
 
