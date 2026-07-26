@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Builds
+.next/
+out/
+dist/
+build/
+*.egg-info/
+
+# Env
+.env
+.env.local
+.env*.local
+
+# Caches / tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# Uploaded documents are written here transiently and read back through the MCP
+# server, then deleted. Never commit them.
+sandbox/uploads/

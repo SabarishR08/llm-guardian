@@ -1,0 +1,48 @@
+name: mcp-guardian
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks: [guardian]
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      GUARDIAN_ENVIRONMENT: production
+      GUARDIAN_REDIS_URL: redis://redis:6379/0
+      GUARDIAN_JWT_SECRET: ${GUARDIAN_JWT_SECRET:-change-me-in-production}
+      GUARDIAN_GROQ_API_KEY: ${GUARDIAN_GROQ_API_KEY:-}
+      GUARDIAN_CORS_ORIGINS: '["http://localhost:5173"]'
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    networks: [guardian]
+
+  dashboard:
+    build:
+      context: ./dashboard
+      args:
+        # NEXT_PUBLIC_* are inlined at build time into the client bundle.
+        NEXT_PUBLIC_API_URL: http://localhost:8000
+        NEXT_PUBLIC_WS_URL: ws://localhost:8000/ws/stream
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+    networks: [guardian]
+
+networks:
+  guardian:
+    driver: bridge
