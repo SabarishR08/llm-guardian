@@ -1,4 +1,80 @@
-# 🛡️ MCP Guardian
+# Mcp Guardian
+
+![License](https://img.shields.io/badge/license-MIT-green) ![Language](https://img.shields.io/badge/language-Python-informational) ![Docker](https://img.shields.io/badge/docker-ready-2496ed)
+
+
+## 📌 Overview
+
+MCP Guardian — real-time security firewall protecting AI agents from prompt injection, tool poisoning, and data leaks (RUSH HOUR 24)
+
+## 🏗️ Architecture
+
+```text
+Browser / UI
+     │   HTTP
+     ▼
+FastAPI app
+     │
+     └──▶ Services — chat_llm, chat_orchestrator, event_store, mcp_bridge, simulator, tools, …
+```
+
+## 🧰 Tech Stack
+
+- **Language:** Python
+- **Backend:** FastAPI
+- **Frontend:** Web frontend (dashboard) · React
+- **Deployment:** Docker container
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Python 3.10+
+- Docker (optional, for container runs)
+
+### 1. Clone
+
+```bash
+git clone https://github.com/SabarishR08/mcp-guardian.git
+cd mcp-guardian
+```
+
+### 2. Install dependencies
+
+```bash
+python -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 3. Configure environment
+
+```bash
+cp .env.example .env   # then fill in values
+```
+
+Environment variables used: `GUARDIAN_ENVIRONMENT`, `GUARDIAN_DEBUG`, `GUARDIAN_JWT_SECRET`, `GUARDIAN_ACCESS_TOKEN_EXPIRE_MINUTES`, `GUARDIAN_THRESHOLD_SANITIZE`, `GUARDIAN_THRESHOLD_QUARANTINE`, `GUARDIAN_THRESHOLD_BLOCK`, `GUARDIAN_LLM_DETECTION_ENABLED`, `GUARDIAN_SIMULATOR_ENABLED`.
+
+Most features work without keys; integrations activate when keys are set.
+
+### 4. Run
+
+```bash
+python backend/app/main.py
+```
+
+```bash
+python mcp-servers/filesystem/server.py
+```
+
+### (Alternative) Run with Docker
+
+```bash
+docker compose up --build
+```
+
+
+---
 
 **A Real-Time Security Firewall That Protects AI Agents from Prompt Injection, Tool Poisoning, and Data Leaks**
 
@@ -544,3 +620,9 @@ curl -X POST http://localhost:8000/api/inspect \
 - [Groq API documentation](https://console.groq.com/docs)
 - [FastAPI documentation](https://fastapi.tiangolo.com)
 - [Next.js documentation](https://nextjs.org/docs)
+
+---
+
+## 📄 License
+
+[MIT](LICENSE) — © 2026 Sabarish R.
