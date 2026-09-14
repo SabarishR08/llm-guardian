@@ -3,11 +3,11 @@
 ![License](https://img.shields.io/badge/license-MIT-green) ![Language](https://img.shields.io/badge/language-Python-informational) ![Docker](https://img.shields.io/badge/docker-ready-2496ed)
 
 
-## 📌 Overview
+## Overview
 
 MCP Guardian — real-time security firewall protecting AI agents from prompt injection, tool poisoning, and data leaks (RUSH HOUR 24)
 
-## 🏗️ Architecture
+## Architecture
 
 ```text
 Browser / UI
@@ -18,14 +18,14 @@ FastAPI app
      └──▶ Services — chat_llm, chat_orchestrator, event_store, mcp_bridge, simulator, tools, …
 ```
 
-## 🧰 Tech Stack
+## Tech Stack
 
 - **Language:** Python
 - **Backend:** FastAPI
 - **Frontend:** Web frontend (dashboard) · React
 - **Deployment:** Docker container
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -78,8 +78,8 @@ docker compose up --build
 
 **A Real-Time Security Firewall That Protects AI Agents from Prompt Injection, Tool Poisoning, and Data Leaks**
 
-Team **Mutex** (RH-0045) — **RUSH HOUR 24: National Hackathon**  
-Hosted by **Sathyabama Institute of Science and Technology**  
+Team **Mutex** (RH-0045) — **RUSH HOUR 24: National Hackathon**
+Hosted by **Sathyabama Institute of Science and Technology**
 Team from **Panimalar Engineering College**
 
 | # | Name | Module Ownership |
@@ -91,7 +91,7 @@ Team from **Panimalar Engineering College**
 
 ---
 
-## 🌟 Visual Overview
+## Visual Overview
 
 | Multi-Tool Attack Chain Detection Engine (RH-0045) | Overview Dashboard |
 |---|---|
@@ -124,16 +124,16 @@ Every message resolves to one of four verdicts:
 
 ---
 
-## ⚡ ZERO-HOUR Challenge — Assigned Feature & Produced Solution
- 
-> **Evaluation Phase:** Post-Evaluation Judge Challenge Integration  
+## ZERO-HOUR Challenge — Assigned Feature & Produced Solution
 
-### 🔒 Challenge Statement (Task Locker)
+> **Evaluation Phase:** Post-Evaluation Judge Challenge Integration
+
+### Challenge Statement (Task Locker)
 
 Multi-Tool Attack Chain Detection Engine: Correlate suspicious activities across multiple AI tool calls and sessions to detect coordinated prompt-injection and data-exfiltration attacks that single-request analysis cannot identify.
 
 
-### 💡 Produced Solution: Stateful Multi-Tool Correlation Engine & Live Graph
+### Produced Solution: Stateful Multi-Tool Correlation Engine & Live Graph
 
 Single-request firewalls inspect requests in isolation and miss multi-hop payloads. For example:
 1. **Hop 1 (`read_document` via `filesystem-mcp`):** Agent reads a document containing hidden base64 instructions (*QUARANTINE / Risk: 50.0*).
@@ -142,18 +142,18 @@ Single-request firewalls inspect requests in isolation and miss multi-hop payloa
 
 #### Technical Architecture:
 * **Correlation Engine (`backend/app/engine/correlation.py`):** Stateful correlation manager tracking sliding session windows (600s). Evaluates sequence counts, tool diversity, threat category escalation, and risk amplification.
-* **REST & Real-Time WebSocket API (`backend/app/api/attack_chains.py`):** 
-  - `GET /api/attack-chains`: Retrieve all correlated attack chains.
-  - `POST /api/attack-chains/simulate`: Trigger live 3-hop attack chain simulation for demonstration.
-  - `WS /ws/chains`: Real-time WebSocket event stream pushing attack chains directly to connected frontend clients.
+* **REST & Real-Time WebSocket API (`backend/app/api/attack_chains.py`):**
+ - `GET /api/attack-chains`: Retrieve all correlated attack chains.
+ - `POST /api/attack-chains/simulate`: Trigger live 3-hop attack chain simulation for demonstration.
+ - `WS /ws/chains`: Real-time WebSocket event stream pushing attack chains directly to connected frontend clients.
 * **Live Interactive Graph UI (`dashboard/src/app/(dashboard)/graph/page.tsx`):**
-  - **Dynamic Topology Layout:** Visualizes nodes (`User / Client`, `AI Agent`, `Guardian Firewall`, `MCP Tools`).
-  - **Animated Edge Flow:** Interactive SVG Bezier curves with directional pulsing flow lines indicating threat levels (Red for threat paths, Cyan for clean paths).
-  - **Hop-by-Hop Attack Breakdown:** Sequential step timeline detailing tool names, source-to-target routes, verdicts, risk scores, and payload explanations.
+ - **Dynamic Topology Layout:** Visualizes nodes (`User / Client`, `AI Agent`, `Guardian Firewall`, `MCP Tools`).
+ - **Animated Edge Flow:** Interactive SVG Bezier curves with directional pulsing flow lines indicating threat levels (Red for threat paths, Cyan for clean paths).
+ - **Hop-by-Hop Attack Breakdown:** Sequential step timeline detailing tool names, source-to-target routes, verdicts, risk scores, and payload explanations.
 
 ---
 
-## 📸 Interactive Tour & Screen Demonstrations
+## Interactive Tour & Screen Demonstrations
 
 ### 1. AI Chat & Real-Time Firewall Inspection
 
@@ -218,24 +218,24 @@ Side-by-side comparison of a clean document versus a document poisoned with an i
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```mermaid
 flowchart TD
-    subgraph Client_Zone["🌐 Client & Agent Access Zone"]
-        U["👤 End User Prompt"]
-        A["🤖 AI Agent (Orchestrator / Copilot)"]
-        API["⚡ External API Clients"]
+    subgraph Client_Zone[" Client & Agent Access Zone"]
+        U[" End User Prompt"]
+        A[" AI Agent (Orchestrator / Copilot)"]
+        API[" External API Clients"]
     end
 
-    subgraph Guardian_Core["🛡️ MCP Guardian Inline Security Firewall"]
+    subgraph Guardian_Core[" MCP Guardian Inline Security Firewall"]
         direction TB
         IN_GATE["Gate 1: Inbound Inspection\n(User Prompt -> Agent)"]
         OUT_GATE["Gate 2: Outbound Inspection\n(Tool Response -> Agent)"]
 
-        NORM["1️⃣ Decoupled Normalizer Engine\n(Unicode NFKC Fold · Base64 / Hex / URL / Entity Decoders)"]
+        NORM["1. Decoupled Normalizer Engine\n(Unicode NFKC Fold · Base64 / Hex / URL / Entity Decoders)"]
         
-        subgraph Detectors["2️⃣ 7 Parallel Detection Modules"]
+        subgraph Detectors["2. 7 Parallel Detection Modules"]
             D1["1. PromptInjectionDetector\n(Hybrid: Regex + Cosine Sim)"]
             D2["2. ToolPoisoningDetector\n(Zero-Width & Hidden Directive Scan)"]
             D3["3. PIIDetector\n(Regex + Luhn + Presidio NER)"]
@@ -245,31 +245,31 @@ flowchart TD
             D7["7. SchemaAnomalyDetector\n(JSON Depth & Proto Key Check)"]
         end
 
-        AGG["3️⃣ Signal Aggregator & Risk Fusion\n(0-100 Score Calculation)"]
+        AGG["3. Signal Aggregator & Risk Fusion\n(0-100 Score Calculation)"]
         
-        DECISION{"4️⃣ Heuristics Conclusive?"}
-        LLM["5️⃣ LLM Classifier Second-Opinion\n(Groq / Ollama Async Engine)"]
+        DECISION{"4. Heuristics Conclusive?"}
+        LLM["5. LLM Classifier Second-Opinion\n(Groq / Ollama Async Engine)"]
         
-        VERDICT["6️⃣ Verdict Engine"]
+        VERDICT["6. Verdict Engine"]
     end
 
-    subgraph Verdict_Outputs["🚦 Verdict Outcomes"]
-        V_ALLOW["✅ ALLOW\n(Pass Through Untouched)"]
-        V_SANITIZE["🧹 SANITIZE\n(Strip Threat, Forward Safe Preview)"]
-        V_QUARANTINE["⚠️ QUARANTINE\n(Hold Message & Isolate Evidence)"]
-        V_BLOCK["🛑 BLOCK\n(Reject Execution & Alert Agent)"]
+    subgraph Verdict_Outputs[" Verdict Outcomes"]
+        V_ALLOW[" ALLOW\n(Pass Through Untouched)"]
+        V_SANITIZE[" SANITIZE\n(Strip Threat, Forward Safe Preview)"]
+        V_QUARANTINE[" QUARANTINE\n(Hold Message & Isolate Evidence)"]
+        V_BLOCK[" BLOCK\n(Reject Execution & Alert Agent)"]
     end
 
-    subgraph Telemetry_Store["📊 SOC Telemetry & Storage"]
-        WS["📡 WebSocket Gateway\n(/ws/stream)"]
-        DASH["💻 SOC Console & Live Dashboard"]
-        REDIS[("🗄️ Event Store\n(Redis / Ring Buffer)")]
+    subgraph Telemetry_Store[" SOC Telemetry & Storage"]
+        WS[" WebSocket Gateway\n(/ws/stream)"]
+        DASH[" SOC Console & Live Dashboard"]
+        REDIS[(" Event Store\n(Redis / Ring Buffer)")]
     end
 
-    subgraph MCP_Sandbox["🔒 Sandboxed MCP Execution"]
-        BRIDGE["🌉 MCP Bridge & STDIO Transport"]
-        FS_MCP["📁 Filesystem MCP Server"]
-        DB_MCP["🗄️ Postgres / Vault MCP Server"]
+    subgraph MCP_Sandbox[" Sandboxed MCP Execution"]
+        BRIDGE[" MCP Bridge & STDIO Transport"]
+        FS_MCP[" Filesystem MCP Server"]
+        DB_MCP[" Postgres / Vault MCP Server"]
     end
 
     %% Flow connections
@@ -300,7 +300,7 @@ flowchart TD
 
 ---
 
-## 🔐 Security Modules & Detectors
+## Security Modules & Detectors
 
 MCP Guardian includes 7 specialized detection engines operating in parallel:
 
@@ -316,7 +316,7 @@ MCP Guardian includes 7 specialized detection engines operating in parallel:
 
 ---
 
-## ⚡ Performance Metrics & Latency Benchmarks
+## Performance Metrics & Latency Benchmarks
 
 MCP Guardian is designed for ultra-low overhead inline execution:
 
@@ -349,7 +349,7 @@ MCP Guardian is designed for ultra-low overhead inline execution:
 
 ---
 
-## 📡 API & Health Documentation
+## API & Health Documentation
 
 ### REST API Endpoints
 
@@ -365,7 +365,7 @@ Inspects incoming prompts or tool responses in real time.
     "source": "user:anon",
     "target": "research-agent"
   }
-  ```
+ ```
 - **Response (`200 OK`):**
   ```json
   {
@@ -378,7 +378,7 @@ Inspects incoming prompts or tool responses in real time.
     "latencyMs": 0.28,
     "evidence": [...]
   }
-  ```
+ ```
 
 #### 2. System Health & Introspection (`GET /api/health`)
 Provides live health telemetry, detector latencies, system component states, and risk thresholds.
@@ -412,7 +412,7 @@ Provides live health telemetry, detector latencies, system component states, and
       ...
     ]
   }
-  ```
+ ```
 
 #### 3. Audit Events (`GET /api/events`)
 Retrieves stored security telemetry logs with filtering support.
@@ -434,7 +434,7 @@ WebSocket endpoint broadcasting live inspection telemetry events directly to the
 
 ---
 
-## 🧪 Test Suite & Quality Assurance
+## Test Suite & Quality Assurance
 
 MCP Guardian includes a complete `pytest` automated test suite covering all firewall components:
 
@@ -463,7 +463,7 @@ python scripts/smoke_test.py
 
 ---
 
-## 📁 Folder Structure
+## Folder Structure
 
 ```
 MCP-Guardian/
@@ -578,7 +578,7 @@ cd backend
 uvicorn app.main:app --reload --port 8000
 ```
 
-- **API docs:** http://localhost:8000/docs  
+- **API docs:** http://localhost:8000/docs
 - **Health check:** http://localhost:8000/api/health
 
 #### Dashboard (Next.js)
@@ -623,6 +623,6 @@ curl -X POST http://localhost:8000/api/inspect \
 
 ---
 
-## 📄 License
+## License
 
 [MIT](LICENSE) — © 2026 Sabarish R.
