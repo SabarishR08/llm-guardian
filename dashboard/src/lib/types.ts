@@ -13,6 +13,7 @@ export type ThreatCategory =
   | "policy_violation"
   | "encoded_payload"
   | "schema_anomaly"
+  | "url_threat"
   | "benign";
 
 export type Direction = "inbound" | "outbound";

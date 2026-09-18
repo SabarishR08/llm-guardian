@@ -11,6 +11,7 @@ import {
   ScrollText,
   Binary,
   FileWarning,
+  Link2Off,
   CircleCheck,
   type LucideIcon,
 } from "lucide-react";
@@ -133,6 +134,13 @@ export const CATEGORIES: Record<ThreatCategory, CategoryMeta> = {
     icon: FileWarning,
     description: "Unexpected structure, extra fields, or drift from the contract.",
     hex: "var(--primary)",
+  },
+  url_threat: {
+    label: "URL Threat",
+    short: "URL",
+    icon: Link2Off,
+    description: "Malicious or phishing URLs detected in agent traffic.",
+    hex: "var(--block)",
   },
   benign: {
     label: "Benign",

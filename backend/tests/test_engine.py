@@ -126,4 +126,4 @@ def test_verdict_bands(score, expected):
 
 def test_all_detectors_registered():
     caps = engine.capabilities()
-    assert len(caps) == 7
+    assert len(caps) == 8

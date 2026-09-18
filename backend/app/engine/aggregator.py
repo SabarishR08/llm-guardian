@@ -3,15 +3,21 @@
 from __future__ import annotations
 
 from app.core.config import settings
+from app.services.compliance_mode_service import compliance_modes
 from app.schemas.events import DetectionSignal, Severity, ThreatCategory, Verdict
 
 
 def verdict_for_score(score: float) -> Verdict:
-    if score >= settings.threshold_block:
+    # Compliance modes (ported from llm-prompt-security-middleware):
+    # 'custom' mode swaps in operator-tuned thresholds.
+    s, q, b = compliance_modes.effective_thresholds(
+        settings.threshold_sanitize, settings.threshold_quarantine, settings.threshold_block
+    )
+    if score >= b:
         return Verdict.BLOCK
-    if score >= settings.threshold_quarantine:
+    if score >= q:
         return Verdict.QUARANTINE
-    if score >= settings.threshold_sanitize:
+    if score >= s:
         return Verdict.SANITIZE
     return Verdict.ALLOW
 

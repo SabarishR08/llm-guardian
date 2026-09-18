@@ -311,6 +311,7 @@ const INCIDENT_TITLES: Record<ThreatCategory, string> = {
   policy_violation: "Policy violation held for review",
   encoded_payload: "Encoded exfiltration attempt caught",
   schema_anomaly: "Schema anomaly rejected",
+  url_threat: "Malicious URL caught in agent traffic",
   benign: "Anomalous benign spike",
 };
 
