@@ -47,6 +47,10 @@ class Settings(BaseSettings):
     # classifier for a semantic second opinion. Requires groq_api_key.
     llm_detection_enabled: bool = True
 
+    # URL threat intel (ported from llm-prompt-security-middleware).
+    # Google Safe Browsing v4; without a key the detector runs heuristics only.
+    safe_browsing_api_key: str | None = None
+
     # Traffic simulator (keeps the dashboard alive during demos)
     simulator_enabled: bool = True
     simulator_min_interval_ms: int = 700

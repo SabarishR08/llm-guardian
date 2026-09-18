@@ -22,6 +22,7 @@ from app.engine.detectors import (
     SchemaAnomalyDetector,
     ToolPoisoningDetector,
     ToxicityDetector,
+    URLThreatDetector,
 )
 from app.engine import llm_classifier
 from app.engine.llm import explain_verdict, recommended_action
@@ -33,11 +34,14 @@ from app.schemas.events import (
     ThreatCategory,
     Verdict,
 )
+from app.services.safe_prompt_cache import safe_prompt_cache
+from app.services.compliance_mode_service import compliance_modes
 
 
 class GuardianEngine:
     def __init__(self) -> None:
         self.pii = PIIDetector()
+        self.url_threat = URLThreatDetector()
         self.detectors: list[Detector] = [
             PromptInjectionDetector(),
             ToolPoisoningDetector(),
@@ -46,6 +50,7 @@ class GuardianEngine:
             EncodedPayloadDetector(),
             SchemaAnomalyDetector(),
             PolicyEngine(),
+            self.url_threat,
         ]
 
     # ---- introspection for /api/health -------------------------------------
@@ -82,6 +87,13 @@ class GuardianEngine:
 
     async def inspect(self, req: InspectRequest) -> InspectResponse:
         start = time.perf_counter()
+
+        # Safe-prompt cache fast path (ported from llm-prompt-security-middleware):
+        # content that previously inspected clean is served from cache.
+        cached = safe_prompt_cache.get(req.content)
+        if cached is not None:
+            return InspectResponse(**cached, latencyMs=0.1, llmReasoned=False)
+
         ctx = normalize(req.content)
         ctx.direction = req.direction
         ctx.tool = req.tool
@@ -105,8 +117,18 @@ class GuardianEngine:
                 signals.append(llm_signal)
                 result = aggregate(signals)
 
+        # Compliance modes (ported from llm-prompt-security-middleware):
+        # hybrid mode skips the PII redaction work when the verdict is already
+        # BLOCK from a non-PII category (cheaper runs, equivalent protection).
+        skip_pii_redaction = (
+            compliance_modes.get_mode() == "hybrid"
+            and result.verdict == Verdict.BLOCK
+            and result.category not in (ThreatCategory.PII_LEAKAGE,)
+        )
         sanitized: str | None = None
-        if result.verdict == Verdict.SANITIZE or result.category == ThreatCategory.PII_LEAKAGE:
+        if not skip_pii_redaction and (
+            result.verdict == Verdict.SANITIZE or result.category == ThreatCategory.PII_LEAKAGE
+        ):
             sanitized = self.pii.redact(req.content)
 
         if req.explain:
@@ -123,7 +145,7 @@ class GuardianEngine:
 
         latency = round((time.perf_counter() - start) * 1000, 1)
 
-        return InspectResponse(
+        response = InspectResponse(
             riskScore=result.risk_score,
             category=result.category,
             verdict=result.verdict,
@@ -135,6 +157,24 @@ class GuardianEngine:
             latencyMs=latency,
             llmReasoned=llm_reasoned,
         )
+
+        # Cache only clean verdicts; anything with signals is never cached.
+        if result.verdict == Verdict.ALLOW and not signals:
+            safe_prompt_cache.put(
+                req.content,
+                {
+                    "riskScore": response.riskScore,
+                    "category": response.category,
+                    "verdict": response.verdict,
+                    "severity": response.severity,
+                    "explanation": response.explanation,
+                    "recommendedAction": response.recommendedAction,
+                    "signals": [],
+                    "sanitized": None,
+                },
+            )
+
+        return response
 
     async def inspect_to_event(self, req: InspectRequest) -> GuardianEvent:
         """Inspect and shape the result as a dashboard `GuardianEvent`."""

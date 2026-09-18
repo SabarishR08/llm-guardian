@@ -9,7 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app import __version__
-from app.api import attack_chains, auth, chat, detect, events, health, mcp, reports, ws
+from app.api import admin, attack_chains, auth, chat, detect, events, health, mcp, reports, ws
 from app.engine.correlation import correlator
 from app.core.config import settings
 from app.engine.pipeline import engine
@@ -56,7 +56,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-for module in (health, auth, detect, events, reports, mcp, chat, attack_chains):
+for module in (health, auth, detect, events, reports, mcp, chat, attack_chains, admin):
     app.include_router(module.router)
 app.include_router(attack_chains.router_ws)
 app.include_router(ws.router)

@@ -7,6 +7,7 @@ from app.engine.detectors.toxicity import ToxicityDetector
 from app.engine.detectors.encoded_payload import EncodedPayloadDetector
 from app.engine.detectors.schema_anomaly import SchemaAnomalyDetector
 from app.engine.detectors.policy import PolicyEngine
+from app.engine.detectors.url_threat import URLThreatDetector
 
 __all__ = [
     "PromptInjectionDetector",
@@ -16,4 +17,5 @@ __all__ = [
     "EncodedPayloadDetector",
     "SchemaAnomalyDetector",
     "PolicyEngine",
+    "URLThreatDetector",
 ]

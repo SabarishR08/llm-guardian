@@ -127,6 +127,7 @@ const CATEGORY_ACTIONS: Record<ThreatCategory, string> = {
   policy_violation: "Hold for review by a human operator.",
   encoded_payload: "Decode, re-scan, and block if intent is malicious.",
   schema_anomaly: "Reject the response and request a conforming payload.",
+  url_threat: "Do not fetch or open the URL; report the destination.",
   benign: "Forward without modification.",
 };
 

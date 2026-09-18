@@ -23,6 +23,7 @@ class ThreatCategory(str, Enum):
     POLICY_VIOLATION = "policy_violation"
     ENCODED_PAYLOAD = "encoded_payload"
     SCHEMA_ANOMALY = "schema_anomaly"
+    URL_THREAT = "url_threat"
     BENIGN = "benign"
 
 
