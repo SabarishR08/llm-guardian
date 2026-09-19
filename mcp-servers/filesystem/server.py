@@ -19,7 +19,7 @@ from pathlib import Path
 
 from mcp.server.fastmcp import FastMCP
 
-# The sandbox is a fixed sibling directory: mcp-guardian/sandbox/
+# The sandbox is a fixed sibling directory: llm-guardian/sandbox/
 SANDBOX_ROOT = (Path(__file__).resolve().parent.parent.parent / "sandbox").resolve()
 
 mcp = FastMCP("guardian-demo-filesystem")

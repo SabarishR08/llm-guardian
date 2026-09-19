@@ -1,4 +1,4 @@
-# MCP Guardian - Dashboard
+# LLM Guardian - Dashboard
 
 The Next.js 16 frontend: premium marketing site, authentication, and the
 real-time security operations console.

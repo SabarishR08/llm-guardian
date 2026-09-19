@@ -55,6 +55,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build backend image
-        run: docker build -t mcp-guardian-backend ./backend
+        run: docker build -t llm-guardian-backend ./backend
       - name: Build dashboard image
-        run: docker build -t mcp-guardian-dashboard --build-arg NEXT_PUBLIC_API_URL=http://localhost:8000 ./dashboard
+        run: docker build -t llm-guardian-dashboard --build-arg NEXT_PUBLIC_API_URL=http://localhost:8000 ./dashboard

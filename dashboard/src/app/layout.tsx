@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const SITE = "MCP Guardian";
+const SITE = "LLM Guardian";
 const TAGLINE = "Real-Time Security Firewall for AI Agents";
 
 export const metadata: Metadata = {
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     "LLM security",
     "PII detection",
   ],
-  authors: [{ name: "MCP Guardian" }],
+  authors: [{ name: "LLM Guardian" }],
   openGraph: {
     title: `${SITE} - ${TAGLINE}`,
     description:

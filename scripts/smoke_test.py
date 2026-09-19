@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MCP Guardian smoke test - proves the live backend detects correctly.
+"""LLM Guardian smoke test - proves the live backend detects correctly.
 
 Run the backend, then:  python scripts/smoke_test.py
 Exits non-zero if any check fails. Uses only the standard library.

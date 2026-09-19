@@ -1,4 +1,4 @@
-# MCP Guardian
+# LLM Guardian
 
 ![License](https://img.shields.io/badge/license-MIT-green) ![Language](https://img.shields.io/badge/language-Python-informational) ![Docker](https://img.shields.io/badge/docker-ready-2496ed)
 
@@ -10,7 +10,7 @@
 
 ## Overview
 
-MCP Guardian — real-time security firewall protecting AI agents from prompt injection, tool poisoning, and data leaks (RUSH HOUR 24)
+LLM Guardian — unified security firewall for LLM applications and AI agents. Protects both directions of the pipe: **user-prompt security** (prompt injection, PII/data leaks, toxicity, policy) and **MCP tool-call security** (tool poisoning, sandboxed execution).
 
 ## Architecture
 
@@ -40,8 +40,8 @@ FastAPI app
 ### 1. Clone
 
 ```bash
-git clone https://github.com/SabarishR08/mcp-guardian.git
-cd mcp-guardian
+git clone https://github.com/SabarishR08/llm-guardian.git
+cd llm-guardian
 ```
 
 ### 2. Install dependencies
@@ -113,13 +113,13 @@ AI agents are no longer just chatbots. They now connect to files, databases, and
 
 First, a tool the agent trusts can be tampered with to hide secret instructions inside a normal-looking response, quietly hijacking what the agent does — this is known as prompt injection or tool poisoning. Second, a user's own prompt can accidentally send private information or unsafe content straight into the AI.
 
-Most security tools today only check the user's input, or scan the setup once and produce a report to read later. Nobody is watching the live conversation and stopping an attack the moment it happens. That is the gap MCP Guardian closes.
+Most security tools today only check the user's input, or scan the setup once and produce a report to read later. Nobody is watching the live conversation and stopping an attack the moment it happens. That is the gap LLM Guardian closes.
 
 ---
 
 ## Solution
 
-MCP Guardian is a real-time security firewall that sits between the user, the AI agent, and its tools. It checks every message going in both directions before it ever reaches the AI.
+LLM Guardian is a real-time security firewall that sits between the user, the AI agent, and its tools. It checks every message going in both directions before it ever reaches the AI.
 
 Every message resolves to one of four verdicts:
 
@@ -236,7 +236,7 @@ flowchart TD
         API[" External API Clients"]
     end
 
-    subgraph Guardian_Core[" MCP Guardian Inline Security Firewall"]
+    subgraph Guardian_Core[" LLM Guardian Inline Security Firewall"]
         direction TB
         IN_GATE["Gate 1: Inbound Inspection\n(User Prompt -> Agent)"]
         OUT_GATE["Gate 2: Outbound Inspection\n(Tool Response -> Agent)"]
@@ -310,7 +310,7 @@ flowchart TD
 
 ## Security Modules & Detectors
 
-MCP Guardian runs **10 specialized detection engines** in parallel (7 core + 3 ported from the consolidated middleware projects):
+LLM Guardian runs **10 specialized detection engines** in parallel (7 core + 3 ported from the consolidated middleware projects):
 
 | # | Security Module | Tier | Detection Methodology | Threat Surface Mitigated |
 |---|-----------------|------|-----------------------|--------------------------|
@@ -329,7 +329,7 @@ MCP Guardian runs **10 specialized detection engines** in parallel (7 core + 3 p
 
 ## Performance Metrics & Latency Benchmarks
 
-MCP Guardian is designed for ultra-low overhead inline execution:
+LLM Guardian is designed for ultra-low overhead inline execution:
 
 ### 1. Latency Breakdown
 
@@ -464,7 +464,7 @@ WebSocket endpoint broadcasting live inspection telemetry events directly to the
 
 ## Test Suite & Quality Assurance
 
-MCP Guardian includes a complete `pytest` automated test suite covering all firewall components:
+LLM Guardian includes a complete `pytest` automated test suite covering all firewall components:
 
 ```bash
 cd backend

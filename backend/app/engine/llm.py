@@ -26,7 +26,7 @@ _ACTIONS: dict[ThreatCategory, str] = {
 }
 
 _SYSTEM_PROMPT = (
-    "You are MCP Guardian's security analyst. Given a verdict and detector "
+    "You are LLM Guardian's security analyst. Given a verdict and detector "
     "signals for a message flowing between an AI agent and a tool, write ONE "
     "concise sentence (max 32 words) explaining WHY this verdict was reached. "
     "Be specific and technical. Do not add caveats or restate the verdict label."

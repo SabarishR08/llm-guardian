@@ -1,4 +1,4 @@
-# MCP Guardian - 3-minute demo script
+# LLM Guardian - 3-minute demo script
 
 A tight, judge-facing walkthrough. Every verdict below is real output from the
 detection engine, not scripted.
@@ -13,7 +13,7 @@ detection engine, not scripted.
 
 ## The pitch (one sentence)
 
-> "MCP Guardian is a security firewall that sits between an AI and its tools. Every
+> "LLM Guardian is a security firewall that sits between an AI and its tools. Every
 > tool response is inspected before the model can consume it - and you watch it happen."
 
 ## The run (click the suggestion chips left → right)

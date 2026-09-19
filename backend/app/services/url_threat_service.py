@@ -36,7 +36,7 @@ async def check_url(url: str) -> str | None:
         return None
 
     payload = {
-        "client": {"clientId": "mcp-guardian", "clientVersion": "1.0"},
+        "client": {"clientId": "llm-guardian", "clientVersion": "1.0"},
         "threatInfo": {
             "threatTypes": _THREAT_TYPES,
             "platformTypes": _PLATFORM_TYPES,

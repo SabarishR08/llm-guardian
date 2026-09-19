@@ -1,4 +1,4 @@
-"""MCP Guardian API - application entrypoint."""
+"""LLM Guardian API - application entrypoint."""
 
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="MCP Guardian",
+    title="LLM Guardian",
     description="Real-time bidirectional security firewall for AI agents.",
     version=__version__,
     lifespan=lifespan,
@@ -65,7 +65,7 @@ app.include_router(ws.router)
 @app.get("/", tags=["health"])
 async def root() -> dict[str, str]:
     return {
-        "name": "MCP Guardian",
+        "name": "LLM Guardian",
         "version": __version__,
         "docs": "/docs",
         "status": "operational",

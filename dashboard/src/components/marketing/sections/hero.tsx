@@ -106,7 +106,7 @@ export function Hero() {
             transition={{ duration: 0.7, ease: EASE, delay: 0.15 }}
             className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground"
           >
-            MCP Guardian sits inline between your users, AI agents, and MCP
+            LLM Guardian sits inline between your users, AI agents, and MCP
             tools - inspecting every request and every response in real time.
             Prompt injection, tool poisoning, and data leaks are scored,
             explained, and stopped before they land.

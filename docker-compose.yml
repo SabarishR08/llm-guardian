@@ -1,4 +1,4 @@
-name: mcp-guardian
+name: llm-guardian
 
 services:
   redis:

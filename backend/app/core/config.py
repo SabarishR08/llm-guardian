@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_prefix="GUARDIAN_", extra="ignore")
 
     # App
-    app_name: str = "MCP Guardian"
+    app_name: str = "LLM Guardian"
     environment: str = "development"
     debug: bool = True
 

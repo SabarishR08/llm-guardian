@@ -1,7 +1,7 @@
 # Demo MCP filesystem server (real, sandboxed)
 
 A genuine MCP server - built on the official `mcp` Python SDK, speaking the
-real stdio JSON-RPC protocol - hard-restricted to `mcp-guardian/sandbox/`.
+real stdio JSON-RPC protocol - hard-restricted to `llm-guardian/sandbox/`.
 
 Why it's in its own venv: the `mcp` SDK pulls a newer `starlette` that
 conflicts with the pinned `starlette` version FastAPI needs in

@@ -83,7 +83,7 @@ export function Footer() {
         </div>
 
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 text-xs text-subtle sm:flex-row">
-          <span>© {new Date().getFullYear()} MCP Guardian. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} LLM Guardian. All rights reserved.</span>
           <span className="flex items-center gap-2">
             <span className="relative flex size-2">
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-allow opacity-60" />

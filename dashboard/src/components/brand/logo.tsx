@@ -56,7 +56,7 @@ export function Logo({
       <GuardianMark />
       {showWordmark && (
         <span className="text-[0.98rem] font-semibold tracking-tight text-foreground">
-          MCP Guardian
+          LLM Guardian
         </span>
       )}
     </span>

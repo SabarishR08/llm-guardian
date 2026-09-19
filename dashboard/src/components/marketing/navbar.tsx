@@ -41,7 +41,7 @@ export function Navbar() {
             : "border border-transparent",
         )}
       >
-        <Link href="/" className="shrink-0" aria-label="MCP Guardian home">
+        <Link href="/" className="shrink-0" aria-label="LLM Guardian home">
           <Logo />
         </Link>
 

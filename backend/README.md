@@ -1,4 +1,4 @@
-# MCP Guardian - Backend
+# LLM Guardian - Backend
 
 FastAPI service housing the detection engine, authentication, real-time
 WebSocket stream, traffic simulator, and reporting.
