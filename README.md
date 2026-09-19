@@ -1,7 +1,12 @@
-# Mcp Guardian
+# MCP Guardian
 
 ![License](https://img.shields.io/badge/license-MIT-green) ![Language](https://img.shields.io/badge/language-Python-informational) ![Docker](https://img.shields.io/badge/docker-ready-2496ed)
 
+> Unified LLM & agent-security firewall — the consolidation keeper for
+> `llm-prompt-security-middleware` and `Prompt-Compliance-Automation`.
+> All predecessor capabilities (PII detection/redaction, prompt-injection
+> detection, toxicity, compliance modes & thresholds, safe-prompt cache,
+> keyword/length policies, compliance reporting) live here now.
 
 ## Overview
 
@@ -50,18 +55,21 @@ pip install -r requirements.txt
 ### 3. Configure environment
 
 ```bash
-cp .env.example .env   # then fill in values
+cp backend/.env.example backend/.env   # then fill in values
 ```
 
-Environment variables used: `GUARDIAN_ENVIRONMENT`, `GUARDIAN_DEBUG`, `GUARDIAN_JWT_SECRET`, `GUARDIAN_ACCESS_TOKEN_EXPIRE_MINUTES`, `GUARDIAN_THRESHOLD_SANITIZE`, `GUARDIAN_THRESHOLD_QUARANTINE`, `GUARDIAN_THRESHOLD_BLOCK`, `GUARDIAN_LLM_DETECTION_ENABLED`, `GUARDIAN_SIMULATOR_ENABLED`.
+Environment variables used (prefix `GUARDIAN_`): `GUARDIAN_ENVIRONMENT`, `GUARDIAN_DEBUG`, `GUARDIAN_JWT_SECRET`, `GUARDIAN_ACCESS_TOKEN_EXPIRE_MINUTES`, `GUARDIAN_THRESHOLD_SANITIZE`, `GUARDIAN_THRESHOLD_QUARANTINE`, `GUARDIAN_THRESHOLD_BLOCK`, `GUARDIAN_LLM_DETECTION_ENABLED`, `GUARDIAN_SIMULATOR_ENABLED`, `GUARDIAN_GROQ_API_KEY` (optional — enables the LLM second-opinion classifier).
 
-Most features work without keys; integrations activate when keys are set.
+Most features work without keys; the ML tier auto-installs via `requirements-ml.txt` and integrations activate when keys are set.
 
 ### 4. Run
 
 ```bash
-python backend/app/main.py
+cd backend
+uvicorn app.main:app --reload
 ```
+
+MCP sandbox server (optional, separate terminal):
 
 ```bash
 python mcp-servers/filesystem/server.py
@@ -302,7 +310,7 @@ flowchart TD
 
 ## Security Modules & Detectors
 
-MCP Guardian includes 7 specialized detection engines operating in parallel:
+MCP Guardian runs **10 specialized detection engines** in parallel (7 core + 3 ported from the consolidated middleware projects):
 
 | # | Security Module | Tier | Detection Methodology | Threat Surface Mitigated |
 |---|-----------------|------|-----------------------|--------------------------|
@@ -313,6 +321,9 @@ MCP Guardian includes 7 specialized detection engines operating in parallel:
 | 5 | `ToxicityDetector` | Hybrid | Regex lexicon + Detoxify transformer model | Threats, abuse, harassment, hate speech, and toxic prompts (caught even without explicit banned keywords). |
 | 6 | `PolicyEngine` | Heuristic | Swappable declarative compliance regex rules | Organizational policy breaches: disabling security controls, unauthorized wire transfers, destructive commands (`rm -rf`, `DROP TABLE`). |
 | 7 | `SchemaAnomalyDetector` | Heuristic | Structural JSON parsing + depth calculation + key scan | Oversized payloads (>4 KB), deep JSON nesting (depth >6), prototype pollution attempts (`__proto__`), suspicious keys (`exec`, `system`). |
+| 8 | `URLThreatDetector` | Heuristic | URL extraction + scheme/host heuristics with safe-listing | Phishing/malicious URLs embedded in prompts and tool responses. |
+| 9 | `KeywordPolicyDetector` | Heuristic | Ops-configurable blocked/flagged word lists (JSON settings) | Outright-blocked terms (secrets, keys) and flagged terms (confidentiality markers) — ported from Prompt-Compliance-Automation. |
+| 10 | `LengthPolicyDetector` | Heuristic | Configurable max-prompt length limits | Oversized-prompt abuse and cost/control policy enforcement — ported from Prompt-Compliance-Automation. |
 
 ---
 
@@ -324,7 +335,7 @@ MCP Guardian is designed for ultra-low overhead inline execution:
 
 | Execution Path | Mean Latency | Overhead Impact |
 |----------------|--------------|-----------------|
-| **Heuristic Detection Engine (7 Detectors)** | **0.12 ms – 0.35 ms** | Sub-millisecond (Imperceptible) |
+| **Heuristic Detection Engine (7 core detectors)** | **0.12 ms – 0.35 ms** | Sub-millisecond (Imperceptible) |
 | **Full Heuristic Pipeline + Aggregator** | **< 1.2 ms** | Zero impact on UX |
 | **ML Enhancement Tier (Embeddings + NER + Detoxify)** | **~50 ms – 120 ms** | Fast asynchronous evaluation |
 | **LLM Second-Opinion Escalation (Groq Llama-3 / Ollama)** | **~350 ms – 500 ms** | Fired only on ambiguous scores |
@@ -340,6 +351,8 @@ MCP Guardian is designed for ultra-low overhead inline execution:
 | `ToxicityDetector` | **0.11 ms** | Lexicon Matcher |
 | `PolicyEngine` | **0.05 ms** | Direct Pattern Match |
 | `SchemaAnomalyDetector` | **0.04 ms** | JSON Key & Depth Counter |
+
+*(The three policy/URL detectors added in the consolidation — `URLThreatDetector`, `KeywordPolicyDetector`, `LengthPolicyDetector` — are excluded from the pure-heuristic micro-benchmarks above; `URLThreatDetector` performs network lookups and is inherently latency-variable.)*
 
 ### 3. Throughput & Scalability
 
@@ -375,8 +388,10 @@ Inspects incoming prompts or tool responses in real time.
     "severity": "critical",
     "explanation": "Prompt-injection indicators: credential-exfil, instruction-override.",
     "recommendedAction": "Block the request and flag the originating session.",
+    "signals": [...],
+    "sanitized": null,
     "latencyMs": 0.28,
-    "evidence": [...]
+    "llmReasoned": false
   }
  ```
 
@@ -387,10 +402,10 @@ Provides live health telemetry, detector latencies, system component states, and
   ```json
   {
     "status": "operational",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "environment": "development",
     "detectors": {
-      "total": 7,
+      "total": 10,
       "upgraded": 3,
       "list": [...]
     },
@@ -415,18 +430,31 @@ Provides live health telemetry, detector latencies, system component states, and
  ```
 
 #### 3. Audit Events (`GET /api/events`)
-Retrieves stored security telemetry logs with filtering support.
+Retrieves stored security telemetry logs (JWT required).
 
-- **Query Parameters:** `category`, `verdict`, `direction`, `limit` (default: 50)
+- **Query Parameters:** `limit` (default: 100, max: 500)
 - **Response (`200 OK`):** Array of historical inspection event logs.
 
-#### 4. Executive Security Reports (`GET /api/reports`)
-Generates aggregated security summary reports in PDF, CSV, or JSON format.
+#### 4. Executive Security Reports (`GET /api/reports/summary` & `GET /api/reports/export.csv`)
+Aggregated security summaries (JSON) and CSV export for spreadsheet/BI ingestion.
 
-#### 5. JWT Authentication (`POST /api/auth/token` & `GET /api/auth/me`)
-Issues access tokens for securing SOC Dashboard and API routes.
+#### 5. Compliance Reporting (consolidated from Prompt-Compliance-Automation)
 
-#### 6. Live Chat Firewall Proxy (`POST /api/chat`)
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /api/compliance/summary` | Aggregated compliance scan summary |
+| `GET /api/compliance/events` | Flagged-event stream for review |
+| `GET /api/compliance/report` | Full compliance report |
+| `GET /api/compliance/export.csv` | CSV export |
+| `GET /api/admin/compliance` | Current mode + thresholds (`default` / `hybrid` / `custom`) |
+| `PUT /api/admin/compliance/mode` | Switch scan-policy mode at runtime |
+| `PUT /api/admin/compliance/thresholds` | Set custom sanitize/quarantine/block thresholds |
+| `GET /api/admin/cache/stats` · `DELETE /api/admin/cache` | Safe-prompt cache telemetry & invalidation |
+
+#### 6. JWT Authentication (`POST /api/auth/login` & `GET /api/auth/me`)
+Issues access tokens for securing SOC Dashboard and API routes (also `POST /api/auth/register`, `POST /api/auth/forgot`).
+
+#### 7. Live Chat Firewall Proxy (`POST /api/chat`)
 Orchestrates multi-turn agent conversations with inline Guardian inspection.
 
 ### Real-Time Telemetry Stream (`WS /ws/stream`)
@@ -441,20 +469,26 @@ MCP Guardian includes a complete `pytest` automated test suite covering all fire
 ```bash
 cd backend
 pip install -r requirements-dev.txt
+pip install -r requirements-ml.txt   # optional: full hybrid ML tier
 pytest -q
 ```
+
+Without the ML tier the suite still passes — ML-dependent tests skip automatically.
 
 ### Test Coverage Breakdown
 
 | Test File | Test Targets & Scope |
 |-----------|----------------------|
-| [`test_engine.py`](./backend/tests/test_engine.py) | Unit tests for all 7 detectors, signal aggregation, risk score calculation, and verdict boundaries. |
+| [`test_engine.py`](./backend/tests/test_engine.py) | Unit tests for all detectors, signal aggregation, risk score calculation, and verdict boundaries. |
 | [`test_api.py`](./backend/tests/test_api.py) | REST API integration tests for `/api/inspect`, `/api/health`, `/api/events`, and auth routes. |
 | [`test_chat.py`](./backend/tests/test_chat.py) | End-to-end chat orchestration, inline firewall interception, and agent execution safety. |
 | [`test_evidence.py`](./backend/tests/test_evidence.py) | Evidence extraction, line highlighting, and sanitized preview generation formatting. |
 | [`test_llm_classifier.py`](./backend/tests/test_llm_classifier.py) | Groq LLM second-opinion classifier fallbacks, prompt construction, and escalation checks. |
 | [`test_mcp_bridge.py`](./backend/tests/test_mcp_bridge.py) | Sandboxed MCP server STDIO transport bridge and tool execution boundaries. |
 | [`test_reply.py`](./backend/tests/test_reply.py) | Agent response sanitization, quarantine formatting, and user safety checks. |
+| [`test_attack_chains.py`](./backend/tests/test_attack_chains.py) | Multi-tool attack-chain correlation and graph analysis. |
+| [`test_consolidation.py`](./backend/tests/test_consolidation.py) | Regression suite for capabilities absorbed from `llm-prompt-security-middleware` (Group A consolidation). |
+| [`test_group_a_compliance.py`](./backend/tests/test_group_a_compliance.py) | Compliance modes, keyword/length policies, safe-prompt cache, and compliance reporting (ported from Prompt-Compliance-Automation). |
 
 Run the live end-to-end integration smoke test:
 ```bash
@@ -469,14 +503,14 @@ python scripts/smoke_test.py
 MCP-Guardian/
 ├── backend/                    # FastAPI detection engine + WebSocket API
 │   ├── app/
-│   │   ├── api/                # REST + WS routers (detect, events, chat, reports, auth, health)
+│   │   ├── api/                # REST + WS routers (detect, events, chat, reports, compliance, admin, auth, health, attack_chains, mcp, ws)
 │   │   ├── engine/
-│   │   │   ├── detectors/      # 7 plugin detectors (Injection, Poisoning, PII, Payload, Toxicity, Policy, Schema)
+│   │   │   ├── detectors/      # 10 plugin detectors (Injection, Poisoning, PII, Payload, Toxicity, Policy, Schema, URLThreat, KeywordPolicy, LengthPolicy)
 │   │   │   ├── normalizer.py   # unicode fold + base64/hex/url/entity decoding
 │   │   │   ├── aggregator.py   # signal fusion → risk score + verdict
 │   │   │   ├── llm_classifier.py  # Groq/Ollama LLM second-opinion
 │   │   │   └── pipeline.py     # orchestration pipeline
-│   │   ├── services/           # event store, ws manager, simulator, chat, tools
+│    │   ├── services/           # event store, ws manager, simulator, chat, tools, compliance modes, safe-prompt cache, mcp bridge
 │   │   └── core/               # config, JWT auth
 │   └── tests/                  # pytest suite (engine, API, chat, LLM classifier, bridge)
 ├── dashboard/                  # Next.js 16 SOC console + marketing site
@@ -486,7 +520,7 @@ MCP-Guardian/
 │       ├── features/           # auth · telemetry · detection
 │       └── lib/                # api client, tokens, types, utils
 ├── docs/                       # Project documentation & screenshots
-│   └── screenshots/            # 13 high-res UI & feature demonstration screenshots
+│   └── screenshots/            # 16 high-res UI & feature demonstration screenshots
 ├── mcp-servers/
 │   └── filesystem/             # Sandboxed MCP server (stdio, isolated venv)
 ├── sandbox/                    # Files exposed to the MCP server for demos
