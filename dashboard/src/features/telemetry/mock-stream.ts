@@ -269,7 +269,7 @@ export function seedTrafficSeries(points = 24): MetricPoint[] {
 
 export function seedSystemHealth(): SystemHealthComponent[] {
   return [
-    { name: "Detection Engine", status: "operational", latencyMs: randInt(8, 22), detail: "7/7 detectors online" },
+    { name: "Detection Engine", status: "operational", latencyMs: randInt(8, 22), detail: "10/10 engines online" },
     { name: "WebSocket Gateway", status: "operational", latencyMs: randInt(2, 9), detail: "streaming" },
     { name: "Risk Aggregator", status: "operational", latencyMs: randInt(3, 12), detail: "calibrated" },
     { name: "LLM Explainer (Groq)", status: "operational", latencyMs: randInt(120, 340), detail: "primary" },

@@ -201,8 +201,8 @@ function analysisNode(
     subtitle: done
       ? threat
         ? `Threat found - ${CATEGORIES[result!.category].label}`
-        : "All seven detectors cleared"
-      : "Seven detectors scanning in parallel",
+        : "All detectors cleared"
+      : "Detectors scanning in parallel",
     status: done ? "done" : "active",
     tone: threat ? "warn" : "primary",
     detail: !done ? <DetectorSweep /> : undefined,

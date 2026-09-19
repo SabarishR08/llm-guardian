@@ -49,7 +49,7 @@ export default function AuthLayout({
             <div className="mt-8 space-y-3">
               {[
                 { icon: Activity, label: "Real-time bidirectional monitoring" },
-                { icon: ShieldCheck, label: "Seven concurrent detection engines" },
+                { icon: ShieldCheck, label: "Ten concurrent detection engines" },
                 { icon: Lock, label: "Runs fully on your infrastructure" },
               ].map((f) => (
                 <div

@@ -18,7 +18,7 @@ const FAQS = [
   },
   {
     q: "Does it require sending my data to a cloud LLM?",
-    a: "No. The seven-detector heuristic and ML tiers run entirely on your infrastructure. Guardian can optionally call Groq for faster natural-language explanations, and falls back to a local Ollama model or a deterministic explainer - so it works fully air-gapped.",
+    a: "No. The ten-engine heuristic and ML tiers run entirely on your infrastructure. Guardian can optionally call Groq for faster natural-language explanations, and falls back to a local Ollama model or a deterministic explainer - so it works fully air-gapped.",
   },
   {
     q: "What's the performance overhead?",

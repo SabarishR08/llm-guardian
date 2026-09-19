@@ -23,7 +23,7 @@ const STEPS = [
   {
     icon: ScanLine,
     title: "Inspect",
-    body: "Seven detectors run concurrently: injection, poisoning, PII, toxicity, policy, encoding, and schema.",
+    body: "Ten engines run concurrently: injection, poisoning, PII, toxicity, policy (rules + keyword + length tiers), encoding, schema, and URL threat intel.",
   },
   {
     icon: Gavel,

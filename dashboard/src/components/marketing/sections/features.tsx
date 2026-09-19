@@ -136,8 +136,8 @@ export function Features() {
             },
             {
               icon: Workflow,
-              title: "Policy engine",
-              body: "Declarative rules with per-tool overrides.",
+              title: "Policy & compliance modes",
+              body: "Declarative rules, keyword & length policies, runtime compliance modes with operator-tuned thresholds.",
             },
             {
               icon: Boxes,

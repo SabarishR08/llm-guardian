@@ -41,7 +41,7 @@ export function InteractiveDemo() {
         <SectionHeading
           eyebrow="Interactive demo"
           title="Attack it yourself"
-          description="Paste a payload or pick a preset. Guardian scores it against all seven detectors right here in your browser - the same engine that runs inline in production."
+          description="Paste a payload or pick a preset. Guardian scores it against the full detector suite right here in your browser - the same rules that run inline in production."
         />
 
         <Reveal className="mt-14">
@@ -132,7 +132,7 @@ function ScanningState() {
         <span className="size-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
       </div>
       <p className="font-mono text-xs text-muted">
-        Running 7 detectors concurrently…
+        Running detectors concurrently…
       </p>
     </motion.div>
   );

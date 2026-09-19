@@ -234,7 +234,7 @@ export function analyze(input: string): LocalAnalysis {
 
   const explanation =
     signals.length === 0
-      ? "No threat indicators found across the seven detectors. This is clean operational traffic."
+      ? "No threat indicators found across the detector suite. This is clean operational traffic."
       : `${signals[0].message} ${
           signals.length > 1
             ? `${signals.length - 1} additional signal${

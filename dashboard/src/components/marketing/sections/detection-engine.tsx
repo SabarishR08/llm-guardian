@@ -21,6 +21,7 @@ const DETECTORS: {
   { key: "encoded_payload", tier: "Heuristic", engine: "Entropy + decode" },
   { key: "schema_anomaly", tier: "Structural", engine: "JSON-schema drift" },
   { key: "policy_violation", tier: "Declarative", engine: "Rule engine" },
+  { key: "url_threat", tier: "Heuristic + Intel", engine: "URL threat intel (optional Safe Browsing tier)" },
 ];
 
 export function DetectionEngine() {
@@ -41,8 +42,8 @@ export function DetectionEngine() {
       <div className="mx-auto max-w-6xl px-6">
         <SectionHeading
           eyebrow="Detection engine"
-          title="Seven detectors. One verdict."
-          description="Detectors run concurrently and emit weighted signals. A risk aggregator fuses them into a single explainable decision - and each tier degrades gracefully when its model isn't available."
+          title="Ten engines. Eight signal classes. One verdict."
+          description="Ten detection engines run concurrently and emit weighted signals — the policy class alone is fed by three engines (declarative rules, keyword policy, length policy). A risk aggregator fuses them into a single explainable decision, and each tier degrades gracefully when its model isn't available."
         />
 
         <div className="mt-16 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_1px_0.9fr]">

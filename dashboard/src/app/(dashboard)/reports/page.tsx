@@ -38,8 +38,8 @@ const REPORTS = [
   {
     id: "compliance",
     title: "Compliance & Audit Trail",
-    desc: "Full inspection log formatted for SOC 2 / ISO 27001 review.",
-    cadence: "Monthly",
+    desc: "Runtime compliance modes (default / hybrid / custom) with operator-tuned thresholds and hot-editable keyword policies. Reporting API: /api/compliance/summary, /api/compliance/events, /api/compliance/report, /api/compliance/export.csv - SOC 2 / ISO 27001 friendly.",
+    cadence: "On demand",
   },
 ];
 

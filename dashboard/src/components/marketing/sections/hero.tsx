@@ -137,7 +137,7 @@ export function Hero() {
           >
             {[
               { icon: Activity, label: "Sub-30ms inline latency" },
-              { icon: ShieldCheck, label: "7 detection engines" },
+              { icon: ShieldCheck, label: "10 detection engines" },
               { icon: Cpu, label: "Runs fully offline" },
             ].map((s) => (
               <span key={s.label} className="inline-flex items-center gap-1.5">
@@ -287,7 +287,7 @@ function InterceptionPanel() {
                 className="flex h-[7.5rem] items-center justify-center gap-3 rounded-xl border border-border bg-surface/30 text-xs text-muted"
               >
                 <span className="size-3 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
-                Running 7 detectors…
+                Running detectors…
               </motion.div>
             )}
           </AnimatePresence>
