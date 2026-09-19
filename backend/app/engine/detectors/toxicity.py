@@ -9,6 +9,7 @@ from __future__ import annotations
 import re
 
 from app.engine.base import Detector, InspectionContext
+from app.engine.detectors.toxicity_thresholds import evaluate_labels
 from app.schemas.events import DetectionSignal, ThreatCategory
 
 _PATTERNS: list[tuple[re.Pattern[str], float]] = [
@@ -57,15 +58,14 @@ class ToxicityDetector(Detector):
     def upgraded(self) -> bool:
         return self._model is not None
 
-    def _ml_score(self, text: str) -> float:
+    def _ml_scores(self, text: str) -> dict[str, float]:
         if self._model is None:
-            return 0.0
+            return {}
         try:
             res = self._model.predict(text)
-            worst = max(float(v) for v in res.values())
-            return worst * 100.0
+            return {str(k): float(v) for k, v in res.items()}
         except Exception:  # noqa: BLE001
-            return 0.0
+            return {}
 
     def inspect(self, ctx: InspectionContext) -> list[DetectionSignal]:
         matched: list[str] = []
@@ -76,16 +76,27 @@ class ToxicityDetector(Detector):
                 matched.append(m.group(0))
                 heuristic = max(heuristic, weight)
 
-        ml = self._ml_score(ctx.normalized)
+        # Per-label thresholds (ported from Prompt-Compliance-Automation): a
+        # breach is a label whose score exceeds its own calibrated threshold;
+        # threat/severe_toxicity breaches hard-block regardless of worst score.
+        scores = self._ml_scores(ctx.normalized)
+        breaches, hard_block = evaluate_labels(scores) if scores else ([], False)
+        ml = max((float(b["score"]) for b in breaches), default=0.0) * 100.0
         if heuristic == 0 and ml < 45:
             return []
 
         score = max(heuristic, ml)
+        message = "Toxic or abusive language detected."
+        if breaches:
+            detail = ", ".join(f"{b['label']} {b['score']}>{b['threshold']}" for b in breaches)
+            message = f"Toxic content exceeds per-label thresholds: {detail}."
+            if hard_block:
+                message += " Severity-class label breached."
         return [
             self._signal(
                 score=score,
                 confidence=0.7 if self.upgraded else 0.55,
-                message="Toxic or abusive language detected.",
+                message=message,
                 matched=matched or ["ml-classified toxicity"],
             )
         ]

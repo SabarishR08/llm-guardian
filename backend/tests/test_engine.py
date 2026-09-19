@@ -35,10 +35,18 @@ def test_tool_poisoning_detected():
 
 
 def test_pii_leakage_detected_and_redacted():
-    r = _inspect("Customer SSN 412-55-1987 and card 4111 1111 1111 1111.", direction="outbound")
+    r = _inspect("Customer ref 412-55-1987 and card 4111 1111 1111 1111.", direction="outbound")
     assert r.category == ThreatCategory.PII_LEAKAGE
     assert r.sanitized is not None
     assert "412-55-1987" not in r.sanitized
+
+
+def test_blocked_keyword_overrides_category_to_policy():
+    # "SSN" is on the ops keyword blocklist (PCA port): the prompt is blocked
+    # by policy even though PII also fires.
+    r = _inspect("Customer SSN 412-55-1987.", direction="outbound")
+    assert r.verdict == Verdict.BLOCK
+    assert r.category == ThreatCategory.POLICY_VIOLATION
 
 
 def test_encoded_payload_decoded():
@@ -126,4 +134,4 @@ def test_verdict_bands(score, expected):
 
 def test_all_detectors_registered():
     caps = engine.capabilities()
-    assert len(caps) == 8
+    assert len(caps) == 10

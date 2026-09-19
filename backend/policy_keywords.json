@@ -1,0 +1,17 @@
+{
+  "blocked": [
+    "password",
+    "passkey",
+    "passcode",
+    "ssn",
+    "credit card",
+    "social security number",
+    "token",
+    "api key"
+  ],
+  "flagged": [
+    "confidential",
+    "secret",
+    "internal use"
+  ]
+}
