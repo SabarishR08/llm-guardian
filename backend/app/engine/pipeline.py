@@ -16,6 +16,8 @@ from app.engine.aggregator import aggregate
 from app.engine.base import Detector
 from app.engine.detectors import (
     EncodedPayloadDetector,
+    KeywordPolicyDetector,
+    LengthPolicyDetector,
     PIIDetector,
     PolicyEngine,
     PromptInjectionDetector,
@@ -42,6 +44,8 @@ class GuardianEngine:
     def __init__(self) -> None:
         self.pii = PIIDetector()
         self.url_threat = URLThreatDetector()
+        self.keyword_policy = KeywordPolicyDetector()
+        self.length_policy = LengthPolicyDetector()
         self.detectors: list[Detector] = [
             PromptInjectionDetector(),
             ToolPoisoningDetector(),
@@ -50,6 +54,8 @@ class GuardianEngine:
             EncodedPayloadDetector(),
             SchemaAnomalyDetector(),
             PolicyEngine(),
+            self.keyword_policy,
+            self.length_policy,
             self.url_threat,
         ]
 

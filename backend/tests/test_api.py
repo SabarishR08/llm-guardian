@@ -20,7 +20,7 @@ def _auth(client):
 def test_health(client):
     body = client.get("/api/health").json()
     assert body["status"] == "operational"
-    assert body["detectors"]["total"] == 8
+    assert body["detectors"]["total"] == 10
 
 
 def test_login_and_me(client):

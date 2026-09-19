@@ -71,7 +71,7 @@ def test_heuristic_score_shortener():
 
 def test_health_reports_eight_detectors(client):
     body = client.get("/api/health").json()
-    assert body["detectors"]["total"] == 8
+    assert body["detectors"]["total"] == 10
 
 
 def test_inspect_pipeline_emits_url_threat(client):

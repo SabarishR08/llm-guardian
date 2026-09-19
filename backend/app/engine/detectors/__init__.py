@@ -8,6 +8,8 @@ from app.engine.detectors.encoded_payload import EncodedPayloadDetector
 from app.engine.detectors.schema_anomaly import SchemaAnomalyDetector
 from app.engine.detectors.policy import PolicyEngine
 from app.engine.detectors.url_threat import URLThreatDetector
+from app.engine.detectors.keyword_policy import KeywordPolicyDetector
+from app.engine.detectors.length_policy import LengthPolicyDetector
 
 __all__ = [
     "PromptInjectionDetector",
@@ -18,4 +20,6 @@ __all__ = [
     "SchemaAnomalyDetector",
     "PolicyEngine",
     "URLThreatDetector",
+    "KeywordPolicyDetector",
+    "LengthPolicyDetector",
 ]

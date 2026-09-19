@@ -51,6 +51,10 @@ class Settings(BaseSettings):
     # Google Safe Browsing v4; without a key the detector runs heuristics only.
     safe_browsing_api_key: str | None = None
 
+    # Prompt-length policy (ported from Prompt-Compliance-Automation).
+    # 0 disables the check.
+    max_prompt_length: int = 0
+
     # Traffic simulator (keeps the dashboard alive during demos)
     simulator_enabled: bool = True
     simulator_min_interval_ms: int = 700
